@@ -20,6 +20,6 @@ from django.urls import path, include
 from api.coronavstech.companies.urls import companies_router
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", include(companies_router.urls)),
+    path('admin/', admin.site.urls),
+    path('', include(companies_router.urls)),
 ]
