@@ -16,7 +16,6 @@ pytestmark = pytest.mark.django_db
 class TestGetCompanies(TestCase):
     def test_zero_companies_should_return_empty_list(self) -> None:
         client = Client()
-        # companies_url = "http://127.0.0.1:8000/companies/1"
         companies_url = reverse('companies-list')
         resp = client.get(companies_url)
         self.assertEqual(resp.status_code, 200)
