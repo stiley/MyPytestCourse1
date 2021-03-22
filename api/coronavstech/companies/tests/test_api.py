@@ -72,3 +72,11 @@ class TestPostOperationToCreateNewCompany(BaseCompanyApiTestCase):
         resp_content = json.loads(resp.content)
         self.assertEqual(resp.status_code, 400)
         self.assertIn("is not a valid choice.", str(resp_content))
+
+    @pytest.mark.xfail
+    def test_flaky_example(self) -> None:
+        self.assertEqual(1, 2)
+
+    @pytest.mark.skip
+    def test_should_skip_this_test(self) -> None:
+        self.assertEqual(1, 2)
