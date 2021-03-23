@@ -15,7 +15,7 @@ pytestmark = pytest.mark.django_db
 class BaseCompanyApiTestCase(TestCase):
     def setUp(self) -> None:
         self.client = Client()
-        self.companies_url = reverse('companies-list')
+        self.companies_url = reverse("companies-list")
 
     def tearDown(self) -> None:
         pass
@@ -42,17 +42,25 @@ class TestPostOperationToCreateNewCompany(BaseCompanyApiTestCase):
     def test_create_company_without_args_should_Fail(self) -> None:
         response = self.client.post(path=self.companies_url)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(json.loads(response.content), {"name": ["This field is required."]})
+        self.assertEqual(
+            json.loads(response.content), {"name": ["This field is required."]}
+        )
 
     def test_create_duplicate_should_fail(self) -> None:
         test_company = Company.objects.create(name="2263020 Ontario INC.")
-        resp = self.client.post(path=self.companies_url, data={"name": "2263020 Ontario INC."})
+        resp = self.client.post(
+            path=self.companies_url, data={"name": "2263020 Ontario INC."}
+        )
         resp_content = json.loads(resp.content)
         self.assertEqual(resp.status_code, 400)
-        self.assertEqual(resp_content, {"name": ["company with this name already exists."]})
+        self.assertEqual(
+            resp_content, {"name": ["company with this name already exists."]}
+        )
 
     def test_create_should_pass(self) -> None:
-        resp = self.client.post(path=self.companies_url, data={"name": "Test Company Name"})
+        resp = self.client.post(
+            path=self.companies_url, data={"name": "Test Company Name"}
+        )
         resp_content = json.loads(resp.content)
         self.assertEqual(resp.status_code, 201)
         self.assertEqual(resp_content.get("name"), "Test Company Name")
@@ -61,14 +69,20 @@ class TestPostOperationToCreateNewCompany(BaseCompanyApiTestCase):
         self.assertEqual(resp_content.get("application_link"), "")
 
     def test_create_status_layoff_should_pass(self) -> None:
-        resp = self.client.post(path=self.companies_url, data={"name": "Another Test Company", "status": "Layoffs"})
+        resp = self.client.post(
+            path=self.companies_url,
+            data={"name": "Another Test Company", "status": "Layoffs"},
+        )
         resp_content = json.loads(resp.content)
         self.assertEqual(resp.status_code, 201)
         self.assertEqual(resp_content.get("name"), "Another Test Company")
         self.assertEqual(resp_content.get("status"), "Layoffs")
 
     def test_create_invalid_status_should_fail(self) -> None:
-        resp = self.client.post(path=self.companies_url, data={"name": "Another Test Company", "status": "wrongStatus"})
+        resp = self.client.post(
+            path=self.companies_url,
+            data={"name": "Another Test Company", "status": "wrongStatus"},
+        )
         resp_content = json.loads(resp.content)
         self.assertEqual(resp.status_code, 400)
         self.assertIn("is not a valid choice.", str(resp_content))
